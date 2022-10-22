@@ -20,10 +20,13 @@ public class UserService {
         User user = userRepository.findByUsername(userRequest.getUsername());
         if (user == null) {
             userRepository.save(UserMapper.mapUserRequestToUser(userRequest));
+            log.info("User Created");
             return CommonResponse.builder()
                     .message("User Created")
                     .build();
+
         } else {
+            log.info("User already exist with same username");
             return CommonResponse.builder()
                     .message("User already exist with same username")
                     .build();
