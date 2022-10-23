@@ -39,6 +39,7 @@ public class UserService {
         if (user == null) {
             return CommonResponse.builder()
                     .message("User not found")
+                    .statusCode("404")
                     .build();
         } else if (password == null) {
             return CommonResponse.builder()
