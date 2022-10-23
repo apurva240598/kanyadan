@@ -12,6 +12,9 @@ public class UserMapper {
         return User.builder()
                 .username(userRequest.getUsername())
                 .password(userRequest.getPassword())
+                .firstName(userRequest.getFirstName())
+                .lastName(userRequest.getLastName())
+                .phone(userRequest.getPhone())
                 .build();
     }
 

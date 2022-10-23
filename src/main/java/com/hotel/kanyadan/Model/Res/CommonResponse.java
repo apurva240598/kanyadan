@@ -9,4 +9,5 @@ import lombok.*;
 @Builder
 public class CommonResponse {
     private String message;
+    private String statusCode;
 }
