@@ -1,11 +1,12 @@
 package com.hotel.kanyadan.config;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.ParameterBuilder;
-import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
@@ -19,20 +20,46 @@ import java.util.List;
 
 @Configuration
 @EnableSwagger2
-public class SwaggerConfiguration implements WebMvcConfigurer {
+@ComponentScan("com.hotel.kanyadan.Controller")
+public class SwaggerConfiguration {
+
     @Bean
-    public Docket api() {
-        return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.any()).paths(PathSelectors.any()).build();
-
-}
-
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addRedirectViewController("/configuration/ui", "/swagger-resources/configuration/ui");
+    public Docket swaggerSpringMvcPlugin() {
+        ParameterBuilder paramBuilder = new ParameterBuilder();
+        paramBuilder
+                .name("Authorization")
+                .modelRef(new ModelRef("string"))
+                .parameterType("header")
+                .required(false)
+                .build();
+        List<Parameter> params =
+                new ArrayList<>();
+        params.add(paramBuilder.build());
+        paramBuilder
+                .name("ContextEntityId")
+                .modelRef(new ModelRef("string"))
+                .parameterType("header")
+                .required(false)
+                .build();
+        params.add(paramBuilder.build());
+        return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("All Services")
+                .useDefaultResponseMessages(false)
+                .apiInfo(apiInfo())
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.hotel.kanyadan"))
+                .build()
+                .globalOperationParameters(params);
     }
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("swagger-ui.html").addResourceLocations("com.hotel.kanyadan.Controller");
-    }}
 
+    private ApiInfo apiInfo() {
+        return new ApiInfoBuilder()
+                .title("Digi Comp API")
+                .description("Digi Comp API for Services")
+                .license("Apache License Version 2.0")
+                .licenseUrl("")
+                .version("2.0")
+                .build();
+    }
+}

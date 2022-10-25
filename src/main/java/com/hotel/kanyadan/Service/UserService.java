@@ -24,7 +24,6 @@ public class UserService {
             return CommonResponse.builder()
                     .message("User Created")
                     .build();
-
         } else {
             log.info("User already exist with same username");
             return CommonResponse.builder()
